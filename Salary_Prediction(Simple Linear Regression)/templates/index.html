@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Salary Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Font Awesome for icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: linear-gradient(135deg, #232156 0%, #162336 100%);
+        font-family: "Poppins", sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .card {
+        background: linear-gradient(135deg, #232442 60%, #343e5c 100%);
+        box-shadow: 0 8px 32px rgba(20, 32, 53, 0.45);
+        border-radius: 2rem;
+        padding: 2.5rem 2rem 2rem 2rem;
+        width: 355px;
+        text-align: left;
+        position: relative;
+        color: #e5e8fa;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .card h2 {
+        margin: 0 0 0.29rem 0;
+        font-weight: 700;
+        font-size: 2.1rem;
+        letter-spacing: 0.3px;
+        color: #faf9ff;
+        line-height: 1.2;
+      }
+      .subtitle {
+        font-size: 1.08rem;
+        opacity: 0.7;
+        margin-bottom: 2.15rem;
+        color: #a3b2d5;
+      }
+
+      form {
+        width: 100%;
+      }
+      .input-wrap {
+        background: rgba(49, 60, 91, 0.78);
+        border-radius: 0.9rem;
+        display: flex;
+        align-items: center;
+        padding: 0.85rem 1.05rem;
+        margin-bottom: 25px;
+        border: 1.8px solid #3a4b6c;
+        box-shadow: 0 2px 4px rgba(35, 33, 80, 0.13);
+        transition: border 0.2s;
+      }
+      .input-wrap:focus-within {
+        border: 1.8px solid #675afe;
+      }
+      .input-wrap i {
+        color: #85a7ff;
+        font-size: 1.25rem;
+        margin-right: 0.8rem;
+        opacity: 0.92;
+        transition: color 0.15s;
+      }
+      .input-wrap input[type="number"] {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #fafaff;
+        width: 100%;
+        font-size: 1.12rem;
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+      }
+      .input-wrap input::placeholder {
+        color: #bfcbe5;
+        opacity: 0.66;
+      }
+      .predict-btn {
+        width: 100%;
+        padding: 1.13rem 0;
+        border: none;
+        border-radius: 1rem;
+        font-size: 1.13rem;
+        font-weight: 600;
+        background: linear-gradient(90deg, #9267fa 0%, #28cef5 100%);
+        color: #fff;
+        box-shadow: 0 2px 19px rgba(100, 107, 245, 0.14);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        letter-spacing: 0.1px;
+        margin: 0 0 0.8rem 0;
+        transition: background 0.15s;
+      }
+      .predict-btn:hover {
+        background: linear-gradient(100deg, #372071 0%, #238ed7 100%);
+      }
+      .result-block {
+        margin-top: 1.2rem;
+        padding: 1.18rem 1.05rem;
+        background: rgba(20, 23, 44, 0.55);
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #30f0ff;
+        gap: 0.7rem;
+        animation: fadeIn 0.35s;
+        box-shadow: 0 2px 10px #3a5fff22;
+      }
+      .result-block i {
+        color: #6fadef;
+        font-size: 1.2rem;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (max-width: 480px) {
+        .card {
+          width: 98vw;
+          padding: 1.2rem 0.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h2>SALARY PREDICTOR</h2>
+      <div class="subtitle">Linear regression model</div>
+
+      <form id="salaryForm" autocomplete="off">
+        <div class="input-wrap">
+          <i class="fa-solid fa-briefcase"></i>
+          <input
+            type="number"
+            min="0"
+            max="50"
+            step="0.01"
+            id="experience"
+            name="experience"
+            placeholder="Years of Experience"
+            required
+          />
+        </div>
+        <button class="predict-btn" type="submit">
+          <i class="fa-solid fa-bolt"></i> Predict
+        </button>
+      </form>
+      <div id="result" class="result-block" style="display: none">
+        <i class="fa-solid fa-dollar-sign"></i>
+        <span id="salaryValue">$0.00</span>
+      </div>
+    </div>
+    <script>
+      function predictSalary(years) {
+        // Dummy: customize as needed
+        return 30000 + years * 9000;
+      }
+      const form = document.getElementById("salaryForm");
+      const expInput = document.getElementById("experience");
+      const resultDiv = document.getElementById("result");
+      const salaryValue = document.getElementById("salaryValue");
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const val = expInput.value;
+        if (!val || isNaN(val) || Number(val) < 0) {
+          alert("Please enter valid years of experience.");
+          expInput.focus();
+          return;
+        }
+        const prediction = predictSalary(Number(val));
+        salaryValue.textContent =
+          "$" +
+          prediction.toLocaleString(undefined, {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+          });
+        resultDiv.style.display = "flex";
+      });
+    </script>
+  </body>
+</html>
